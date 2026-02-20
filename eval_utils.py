@@ -135,3 +135,31 @@ def evaluate_docvqa_prediction(raw_prediction, ground_truth):
     
     return is_correct, extracted_answer
 
+def get_evaluation_prompt() -> str:
+    MASTER_PROMPT = (
+        "ACT AS an expert Document Visual Question Answering (DocVQA) system. "
+        "ANALYZE the provided images to extract precise information.\n\n"
+        "### MANDATORY RESPONSE RULES:\n"
+        "1. SOURCE ADHERENCE: If the question is unanswerable from the document, respond ONLY with \"Unknown\".\n"
+        "2. LIST FORMATTING: List multiple answers in order of appearance, separated by a comma and a single space (e.g., \"Answer A, Answer B\"). Do NOT use \"and\".\n"
+        "3. NUMBERS & UNITS:\n"
+        "   - Convert units to their standardized abbreviation (e.g., use \"kg\" not \"kilograms\", \"m\" not \"meters\").\n"
+        "   - Place a single space between the number and the unit (e.g., \"50 kg\", \"10 USD\").\n"
+        "4. PERCENTAGES: For percentages, attach the '%' symbol directly to the number with NO space (e.g., \"50%\", not \"50 %\").\n"
+        "5. DATE FORMATTING: Convert all dates to YYYY-MM-DD format (e.g., convert \"Jan 1st 24\" to \"2024-01-01\").\n"
+        "6. DECIMAL FORMATTING: Decimals should be separated by a single period (e.g., \"3.14\", not \"3,14\").\n"
+        "7. THOUSANDS SEPARATOR: Do NOT use commas as thousands separators (e.g., \"1000\", not \"1,000\").\n"
+        "8. NO FILLER: Output ONLY the result. Do not frame with sentences like \"The answer is...\"."
+
+        "\n\n### REASONING PROTOCOL:\n"
+        "1. Perform exhaustive step-by-step reasoning to locate and verify the data.\n"
+        "2. Verify if the data contains a date, number, or unit.\n"
+        "3. Step-by-step, transform the data to match the MANDATORY RESPONSE RULES (e.g., converting date format).\n"
+
+        "\n\n### OUTPUT FORMAT:\n"
+        "After your analysis, you MUST provide the final result in the following format:\n"
+        "FINAL ANSWER: [Your exact formatted answer]\n"
+        "Ensure the content inside [FINAL ANSWER] strictly follows the MANDATORY RESPONSE RULES."
+    )
+    
+    return MASTER_PROMPT
