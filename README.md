@@ -1,3 +1,4 @@
+
 <p align="center">
   <img src="./assets/banner.png" alt="DocVQA 2026 Competition Banner" width="100%">
 </p>
@@ -20,6 +21,20 @@ Building upon previous DocVQA benchmarks, this evaluation dataset introduces cha
 
 By expanding coverage to new document domains and introducing richer question types, this benchmark seeks to push the boundaries of multimodal reasoning and promote the development of more general, robust document understanding models.
 
+## 🏆 Competition Hosting & Test Set
+
+The official DocVQA 2026 competition is hosted on the **Robust Reading Competition (RRC)** platform, which provides the standardized framework for our leaderboards, submissions, and result tracking. 
+
+> [!NOTE]
+> **Test Set Status:** *Coming Soon!*  By the time being, please use the provided validation set and the evaluation code.
+
+<p align="center">
+  <a href="https://www.docvqa.org/challenges/2026" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 18px; display: inline-block;">
+    Join the Challenge on the RRC Platform
+  </a>
+</p>
+
+
 ## Load & Inspect the Data
 
 ```python
@@ -29,7 +44,7 @@ from datasets import load_dataset
 dataset = load_dataset("VLR-CVC/DocVQA-2026", split="val")
 
 # 2. Access a single sample (one document)
-sample = dataset[5]
+sample = dataset[0]
 
 doc_id = sample["doc_id"]
 category = sample["doc_category"]
@@ -46,12 +61,12 @@ questions = sample["questions"]
 answers = sample["answers"]
 
 # 5. Visualize Q&A pairs for a document
-for q, a in zip(questions, answers):
+for q, q_id, a in zip(questions['question'], questions['question_id'], answers['answer']):
     print("-" * 50)
-    print(f"Question: {q['question']}")
-    print(f"Answer: {a['answer']}")
+    print(f"Question ID: {q_id}")
+    print(f"Question: {q}")
+    print(f"Answer: {a}")
     print("-" * 50)
-
 ```
 
 ## Structure of a Sample
@@ -61,26 +76,44 @@ for q, a in zip(questions, answers):
   
 ```json
 {
-    'doc_id': 'comics_1',
-    'doc_category': 'comics',
-    'document': [,
-        <PIL.PngImagePlugin.PngImageFile image mode=RGB size=1240x1754 at 0x7F...>,
-        ...
-        <PIL.PngImagePlugin.PngImageFile image mode=RGB size=1240x1754 at 0x7F...> 
-      
+  "doc_id": "maps_2",
+  "doc_category": "maps",
+  "preview": "<image>",
+  "document": [
+    "<image>"
+  ],
+  "questions": {
+    "question_id": [
+      "maps_2_q1",
+      "maps_2_q2",
+      "maps_2_q3",
+      "maps_2_q4",
+      "maps_2_q5"
     ],
-    'questions': [
-        {
-            'question_id': 'comics_1_q1', 
-            'question': "How many times do people get in the head in Nyoka and the Witch Doctor's Madness?"
-        }
-    ],
-    'answers': [
-        {
-            'question_id': 'comics_1_q1', 
-            'answer': '4'
-        }
+    "question": [
+      "By which kind of road are Colchester and Yantic connected?",
+      "Which is the most populated town in the E-10 coordinates?",
+      "What is the milage between Taunton and Dedham? Do not provide the unit.",
+      "From Worcester I take highway 140 towards Taunton, I take the second macadam & gravel road that I encounter, continuing on that road, what town do I reach?",
+      "If I follow highway 109 from Pittsfield to Northampton, how many towns do I cross (without counting start and ending location)?"
     ]
+  },
+  "answers": {
+    "question_id": [
+      "maps_2_q1",
+      "maps_2_q2",
+      "maps_2_q3",
+      "maps_2_q4",
+      "maps_2_q5"
+    ],
+    "answer": [
+      "Macadam & Gravel",
+      "Wareham",
+      "27",
+      "Woonsocket",
+      "7"
+    ]
+  }
 }
 ```
 </details>
@@ -181,6 +214,42 @@ for q, a in zip(questions, answers):
 
 > [!WARNING]
 > **API Constraints:** > Both models were evaluated via their respective APIs. If a sample fails because the input files are too large, the result counts as a failure. For example, the file input limit for OpenAI models is 50MB, and several comics in this dataset surpass that threshold.
+
+
+--------
+
+<div style="border: 1px solid black; background-color: white; color: black; padding: 20px; border-radius: 8px;">
+  <h2 style="margin-top: 0; color: black;">📝 Submission Guidelines & Formatting Rules</h2>
+  <p>To ensure fair and accurate evaluation across all participants, submissions are evaluated using automated metrics. Therefore, all model outputs must strictly adhere to the following formatting rules:</p>
+  <ul>
+    <li><strong style="color: black;">Source Adherence:</strong> Only provide answers found directly within the document. If the question is unanswerable given the provided image, the response must be exactly: <code>"Unknown"</code>.</li>
+    <li><strong style="color: black;">Multiple Answers:</strong> List multiple answers in their order of appearance, separated by a comma and a single space. <strong style="color: black;">Do not</strong> use the word "and". <em>(Example: <code>Answer A, Answer B</code>)</em></li>
+    <li><strong style="color: black;">Numbers & Units:</strong> Convert units to their standardized abbreviations (e.g., use <code>kg</code> instead of "kilograms", <code>m</code> instead of "meters"). Always place a single space between the number and the unit. <em>(Example: <code>50 kg</code>, <code>10 USD</code>)</em></li>
+    <li><strong style="color: black;">Percentages:</strong> Attach the <code>%</code> symbol directly to the number with no space. <em>(Example: <code>50%</code>)</em></li>
+    <li><strong style="color: black;">Dates:</strong> Convert all dates to the standardized <code>YYYY-MM-DD</code> format. <em>(Example: "Jan 1st 24" becomes <code>2024-01-01</code>)</em></li>
+    <li><strong style="color: black;">Decimals:</strong> Use a single period (<code>.</code>) as a decimal separator, never a comma. <em>(Example: <code>3.14</code>)</em></li>
+    <li><strong style="color: black;">Thousands Separator:</strong> Do not use commas to separate large numbers. <em>(Example: <code>1000</code>, not <code>1,000</code>)</em></li>
+    <li><strong style="color: black;">No Filler Text:</strong> Output <strong style="color: black;">only</strong> the requested data. Do not frame your answer in full sentences (e.g., avoid "The answer is...").</li>
+  </ul>
+  <p><strong style="color: black;">Final Output Format:</strong> When generating the final extracted data, your system must prefix the response with the following exact phrasing:</p>
+  <pre style="background-color: white; color: black; border: 1px dashed black; padding: 10px; border-radius: 4px;"><code>FINAL ANSWER: [Your formatted answer]</code></pre>
+</div>
+
+---------
+
+## Evaluation Code & Baselines
+
+To ensure consistency and fairness, all submissions are evaluated using our official automated evaluation pipeline. This pipeline handles the extraction of your model's answers and applies both strict formatting checks (for numbers, dates, and units) and relaxed text matching (ANLS) for text-based answers.
+
+You can find the complete, ready-to-use evaluation script in our official GitHub repository:
+👉 **[VLR-CVC/DocVQA2026 GitHub Repository](https://github.com/VLR-CVC/DocVQA2026)**
+
+### What you will find in the repository:
+
+* **The Evaluator Script:** The core logic used to parse your model's outputs and calculate the final scores. You can use this script to test and evaluate your predictions locally before making an official submission.
+* **The Baseline Master Prompt:** We have included the exact prompt structure (`get_evaluation_prompt()`) used for our baseline experiments. This prompt is heavily engineered to enforce the competition's mandatory reasoning protocols and strict output formatting. 
+
+We highly recommend reviewing both the evaluation script and the Master Prompt. You are welcome to use the provided prompt out-of-the-box or adapt it to better guide your own custom models!
 
 ## Dataset Structure
 
