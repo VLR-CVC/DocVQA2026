@@ -29,7 +29,7 @@ The official DocVQA 2026 competition is hosted on the **Robust Reading Competiti
 > **Test Set Status:** *Coming Soon!*  By the time being, please use the provided validation set and the evaluation code.
 
 <p align="center">
-  <a href="https://www.docvqa.org/challenges/2026" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 18px; display: inline-block;">
+  <a href="https://rrc.cvc.uab.es/?ch=34" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 18px; display: inline-block;">
     Join the Challenge on the RRC Platform
   </a>
 </p>
