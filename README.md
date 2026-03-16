@@ -1,4 +1,3 @@
-
 <p align="center">
   <img src="./assets/banner.png" alt="DocVQA 2026 Competition Banner" width="100%">
 </p>
@@ -237,13 +236,12 @@ for q, q_id, a in zip(questions['question'], questions['question_id'], answers['
 > [!NOTE]
 > **Evaluation Parameters:**
 > * **GPT Models:** "High thinking" enabled, temperature set to `1.0`.
-> * **Gemini Models:** "High thinking" enabled, temperature set to `0.0`.
+> * **Gemini Models:** "High thinking" enabled, temperature set to `1.0`.
 
 > [!WARNING]
 > **API Constraints:** Both models were evaluated via their respective APIs. If a sample fails because the input files are too large, the result counts as a failure. For example, the file input limit for OpenAI models is 50MB, and several comics in this dataset surpass that threshold.
 
-
----
+--------
 
 ## 📝 Submission Guidelines & Formatting Rules
 
@@ -263,9 +261,8 @@ To ensure fair and accurate evaluation across all participants, submissions are 
 ```text
 FINAL ANSWER: [Your formatted answer]
 ```
----
 
-
+---------
 ## Evaluation Code & Baselines
 
 To ensure consistency and fairness, all submissions are evaluated using our official automated evaluation pipeline. This pipeline handles the extraction of your model's answers and applies both strict formatting checks (for numbers, dates, and units) and relaxed text matching (ANLS) for text-based answers.
